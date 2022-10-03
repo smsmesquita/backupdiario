@@ -57,8 +57,15 @@ class cadastrar():
            busca1 = [x for x in novoresult if "Nome" in x]
            y = (len(busca1))
            print(busca1[1])
+       
+       a = novoresult.index("Atividades de negócios da empresa")
+           
+       g = a + 1
+       
+       print(novoresult[g])
+        
 
-#é necessario verificar o caso de empresarios individual que nao mostram quem é o sócio
+#é necessario verificar o caso de empresarios individuais que nao mostram quem é o sócio
 def tabelaclientes():
     colunas = ['NCM', 'Descrição']
     dados = pd.DataFrame(columns=colunas)  
