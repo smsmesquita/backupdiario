@@ -1,3 +1,4 @@
+from tkinter import N
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -27,17 +28,22 @@ class cadastrar():
        result = navegador.find_element(By.XPATH, '/html/body').text
        novoresult =  result.splitlines()
        
-       nomedaempresa = novoresult[5]
-       fantasia = novoresult[6]
-       dataatividade = novoresult[7]
-       capital = novoresult[11]
-       opcao = novoresult[13]
+       a1 = novoresult[5]
+       nomedaempresa = a1[16:]
+       a2 = novoresult[6]
+       fantasia = a2[14:]
+       a3 = novoresult[7]
+       dataatividade = a3[22:]
+       a4 = novoresult[11]
+       capital = a4[15:]
+       a5 = novoresult[13]
+       opcao = a5[47:]
        endereco = novoresult[16]
        complemento= novoresult[17]
-       bairro = novoresult[18]
+       cidade = novoresult[18]
        cep = novoresult[19]
-       telefone = novoresult[22]
-    #   print(novoresult)
+
+    #  #   print(novoresult)
      #  busca = [s for s in novoresult if "Qualificação" in s]
        
        busca1 = [x for x in novoresult if "CPF***" in x]
@@ -49,36 +55,54 @@ class cadastrar():
                c = len(b)
                d_ate_entrada = c-1
                e = b[1:d_ate_entrada]
-               socio = (len(e))-1
-               print(e[socio:])
-               print(e[:socio])
+               k = (len(e))-1
+               
+               socio = ''.join(e[:k])
+
        else:
           
            busca1 = [x for x in novoresult if "Nome" in x]
            y = (len(busca1))
-           print(busca1[1])
+           a7 = busca1[1]
+           socio = a7[5:]
        
        a = novoresult.index("Atividades de negócios da empresa")
            
        g = a + 1
        
-       print(novoresult[g])
+       h= novoresult[g]
+       i = h[:9]
+       chars = '. -'
+       cnae= i.translate(str.maketrans('','', chars))
+       
+       self.novosdados = [nomedaempresa, fantasia, dataatividade, capital, opcao, endereco, complemento, cidade, cep, socio, cnae]
+      # print(novosdados)
+       
+   def tabelaclientes(self):
+        colunas = ['NOMEDAEMPRESA', 'FANTASIA', 'DATADEINICIO', 'CAPITAL', 'DATADEOPCAO','ENDERECO', 'COMPLEMENTO', 'CIDADE', 'CEP', 'SOCIO', 'CNAE']
+        dados = pd.DataFrame(columns=colunas)
         
+        dados.loc[len(dados)] = self.novosdados
+        print(dados)
+
+       
+      
+        #como chamar uma lista em outra funcao
 
 #é necessario verificar o caso de empresarios individuais que nao mostram quem é o sócio
-def tabelaclientes():
-    colunas = ['NCM', 'Descrição']
-    dados = pd.DataFrame(columns=colunas)  
+    
+       
+    
+       
 
-
-
-                
+               
 
 #def consulta_simples():
 
 if __name__ == "__main__":
-    caminho = '11320004000173'
+    caminho = '27347220000142'
     cd = cadastrar()
     cd.cadastrar_clientes(caminho)
-  
+    cd.tabelaclientes()
+      
     
