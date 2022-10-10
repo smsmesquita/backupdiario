@@ -47,6 +47,7 @@ class cadastrar():
      #  busca = [s for s in novoresult if "Qualificação" in s]
        
        busca1 = [x for x in novoresult if "CPF***" in x]
+       novosocio = []
        y = (len(busca1))
        if y != 1:
            for i in range(y):
@@ -57,7 +58,11 @@ class cadastrar():
                e = b[1:d_ate_entrada]
                k = (len(e))-1
                
-               socio = ''.join(e[:k])
+               l = ''.join(e[:k])
+               
+               novosocio.append(l)
+               socio = list(zip(novosocio))
+               print(socio)
 
        else:
           
@@ -87,7 +92,6 @@ class cadastrar():
 
        
       
-        #como chamar uma lista em outra funcao
 
 #é necessario verificar o caso de empresarios individuais que nao mostram quem é o sócio
     
@@ -100,7 +104,7 @@ class cadastrar():
 #def consulta_simples():
 
 if __name__ == "__main__":
-    caminho = '27347220000142'
+    caminho = '37128477000167'
     cd = cadastrar()
     cd.cadastrar_clientes(caminho)
     cd.tabelaclientes()
