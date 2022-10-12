@@ -1,4 +1,3 @@
-from tkinter import N
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -6,7 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 import pandas as pd
 from encodings import utf_8
-import numpy as np
+import mysql.connector
+from mysql.connector import Error
 from selenium.webdriver.common.keys import Keys
 
 
@@ -62,7 +62,7 @@ class cadastrar():
                
                novosocio.append(l)
                socio = list(zip(novosocio))
-               print(socio)
+             #  print(socio)
 
        else:
           
@@ -88,7 +88,7 @@ class cadastrar():
         dados = pd.DataFrame(columns=colunas)
         
         dados.loc[len(dados)] = self.novosdados
-        print(dados)
+       
 
        
       
@@ -96,17 +96,53 @@ class cadastrar():
 #é necessario verificar o caso de empresarios individuais que nao mostram quem é o sócio
     
        
-    
-       
+#class AcessDataBase():
+   def __init__(self, name = None):
+        self._host='clientes1304.mysql.uhserver.com'
+        self._user='samuel1304'
+        self._passwd='@lb130488'
+        self._database='tabelaclientes'
+        self.con = None
+        
+   def _connect(self):
+            self.con = mysql.connector.connect(
+            host=self._host,
+            user=self._user,
+            password=self._passwd,
+            database=self._database
+           )
+            
 
+   def close_connection(self):
+        try:
+            self.con.close()
                
+        except:
+            pass        
+
+   def insert_table(self):
+           
+            cursor = self.con.cursor()
+            print('ta ok')
+            print(self.novosdados)
+            valor = self.novosdados
+            
+            banco= "INSERT INTO Tabela_Clientes(NOMEDAEMPRESA, FANTASIA, dataatividade, CAPITAL, opcao,ENDERECO, COMPLEMENTO, CIDADE, CEP, SOCIO, CNAE) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(banco, valor)
+            cursor.close()      
+            self.con.commit()          
 
 #def consulta_simples():
 
 if __name__ == "__main__":
-    caminho = '37128477000167'
+    caminho = '09462139000121'
     cd = cadastrar()
     cd.cadastrar_clientes(caminho)
     cd.tabelaclientes()
+   # db = AcessDataBase()
+    cd._connect()
+    cd.insert_table()
+    cd.close_connection()
+    print('conectado')
       
     
