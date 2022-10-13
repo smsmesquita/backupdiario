@@ -61,7 +61,11 @@ class cadastrar():
                l = ''.join(e[:k])
                
                novosocio.append(l)
-               socio = list(zip(novosocio))
+               novosocio2 = list(zip(novosocio))
+               socio = ', '.join(map(str, sorted(novosocio2)))
+               #socio = zip(novosocio2)
+               print(socio)
+               
              #  print(socio)
 
        else:
@@ -135,7 +139,7 @@ class cadastrar():
 #def consulta_simples():
 
 if __name__ == "__main__":
-    caminho = '09462139000121'
+    caminho = '37128477000167'
     cd = cadastrar()
     cd.cadastrar_clientes(caminho)
     cd.tabelaclientes()
