@@ -87,11 +87,11 @@ class cadastrar():
        self.novosdados = [nomedaempresa, fantasia, dataatividade, capital, opcao, endereco, complemento, cidade, cep, socio, cnae]
       # print(novosdados)
        
-   def tabelaclientes(self):
-        colunas = ['NOMEDAEMPRESA', 'FANTASIA', 'DATADEINICIO', 'CAPITAL', 'DATADEOPCAO','ENDERECO', 'COMPLEMENTO', 'CIDADE', 'CEP', 'SOCIO', 'CNAE']
-        dados = pd.DataFrame(columns=colunas)
+  # def tabelaclientes(self):
+    #    colunas = ['NOMEDAEMPRESA', 'FANTASIA', 'DATADEINICIO', 'CAPITAL', 'DATADEOPCAO','ENDERECO', 'COMPLEMENTO', 'CIDADE', 'CEP', 'SOCIO', 'CNAE']
+     #   dados = pd.DataFrame(columns=colunas)
         
-        dados.loc[len(dados)] = self.novosdados
+      #  dados.loc[len(dados)] = self.novosdados
        
 
        
@@ -127,13 +127,13 @@ class cadastrar():
    def insert_table(self):
            
             cursor = self.con.cursor()
-            print('ta ok')
-            print(self.novosdados)
+            
             valor = self.novosdados
             
             banco= "INSERT INTO Tabela_Clientes(NOMEDAEMPRESA, FANTASIA, dataatividade, CAPITAL, opcao,ENDERECO, COMPLEMENTO, CIDADE, CEP, SOCIO, CNAE) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(banco, valor)
-            cursor.close()      
+            cursor.close()
+            print('inserido com sucesso')      
             self.con.commit()          
 
 #def consulta_simples():
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     caminho = '37128477000167'
     cd = cadastrar()
     cd.cadastrar_clientes(caminho)
-    cd.tabelaclientes()
+    
    # db = AcessDataBase()
     cd._connect()
     cd.insert_table()
