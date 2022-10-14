@@ -15,6 +15,8 @@ from PyQt5 import QtGui
 import re
 import mysql
 from novocadastro import *
+import mysql.connector
+from mysql.connector import Error
 
 
 
@@ -176,13 +178,55 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         super(NovoMainWindow, self).__init__()
         self.setupUi(self)
         self.setWindowTitle('Sistema') 
-        self.pushButton_11.clicked.connect(self.cadastro)        
+        self.pushButton_11.clicked.connect(self.cadastro)
+        
+        self._host='clientes1304.mysql.uhserver.com'
+        self._user='samuel1304'
+        self._passwd='@lb130488'
+        self._database='tabelaclientes'
+        self.con = None        
 
         
     def cadastro(self):
         
         caminho= self.lineEdit.text()
         cadastrar.cadastrar_clientes(self, caminho)
+        
+        cadastrar._connect(self)
+        cadastrar.insert_table(self)
+        cadastrar.close_connection(self)
+        
+        
+    def tabela_geral2(self):        
+        #cn = sqlite3.connect('system.db')
+        
+        self.con = mysql.connector.connect(
+            host=self._host,
+            user=self._user,
+            password=self._passwd,
+            database=self._database
+           )
+        cursor = self.con.cursor()
+        sql = ("SELECT NOMEDAEMPRESA, FANTASIA, dataatividade, CAPITAL, opcao,ENDERECO, COMPLEMENTO, CIDADE, CEP, SOCIO, CNAE FROM Tabela_Clientes")
+        cursor.execute(sql)
+        result =  pd.read_sql_query(sql)
+        result = result.values.tolist()
+        self.x = ""
+        for i in result:
+           if i[0]== self.x:
+                QTreeWidgetItem(self.campo, i)
+           else:
+                self.campo = QTreeWidgetItem(self.tabela_geral2, i)
+                self.campo.setCheckState(0, QtCore.Qt.CheckState.Unchecked)
+                
+                
+                
+        self.x = i[0]
+            
+        self.tabela_geral2.setSortingEnabled(True)
+        
+        for i in range(1,11):
+            self.tabela_geral2.resizeColumnToContents(i)
 
                 
 if __name__ == "__main__":
