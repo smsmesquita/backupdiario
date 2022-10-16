@@ -29,6 +29,7 @@ class Login(QWidget, Ui_Login):
         self.pushButton_2.clicked.connect(self.open_system)
         self.pushButton_4.clicked.connect(self.open_sistemacadastro)
         self.pushButton_4.clicked.connect(lambda: print('botao 4 foi apertado'))
+        
         self.pushButton_2.clicked.connect(lambda: print('botao 2 foi apertado'))
         #self.pushButton_3.clicked.connect(lambda: print('botao 3 foi apertado'))
         
@@ -44,7 +45,9 @@ class Login(QWidget, Ui_Login):
     def open_sistemacadastro(self):
         self.w = NovoMainWindow()
         self.w.show()
-        self.close()   
+        self.close()
+        
+        
                     
 
         
@@ -176,15 +179,26 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
 class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
     def __init__(self):
         super(NovoMainWindow, self).__init__()
+        
         self.setupUi(self)
         self.setWindowTitle('Sistema') 
+        
         self.pushButton_11.clicked.connect(self.cadastro)
+        self.tabela_saida()
+        
+         
+        
         
         self._host='clientes1304.mysql.uhserver.com'
         self._user='samuel1304'
         self._passwd='@lb130488'
         self._database='tabelaclientes'
-        self.con = None        
+        self.con = None
+        
+         
+        
+        
+                
 
         
     def cadastro(self):
@@ -197,8 +211,18 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         cadastrar.close_connection(self)
         
         
-    def tabela_geral2(self):        
-        #cn = sqlite3.connect('system.db')
+        
+        
+        
+        
+        
+    def tabela_saida(self):
+        
+        self._host='clientes1304.mysql.uhserver.com'
+        self._user='samuel1304'
+        self._passwd='@lb130488'
+        self._database='tabelaclientes'
+        self.con = None        
         
         self.con = mysql.connector.connect(
             host=self._host,
@@ -206,27 +230,17 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
             password=self._passwd,
             database=self._database
            )
+     
         cursor = self.con.cursor()
+        
         sql = ("SELECT NOMEDAEMPRESA, FANTASIA, dataatividade, CAPITAL, opcao,ENDERECO, COMPLEMENTO, CIDADE, CEP, SOCIO, CNAE FROM Tabela_Clientes")
         cursor.execute(sql)
-        result =  pd.read_sql_query(sql)
-        result = result.values.tolist()
-        self.x = ""
-        for i in result:
-           if i[0]== self.x:
-                QTreeWidgetItem(self.campo, i)
-           else:
-                self.campo = QTreeWidgetItem(self.tabela_geral2, i)
-                self.campo.setCheckState(0, QtCore.Qt.CheckState.Unchecked)
-                
-                
-                
-        self.x = i[0]
-            
-        self.tabela_geral2.setSortingEnabled(True)
         
-        for i in range(1,11):
-            self.tabela_geral2.resizeColumnToContents(i)
+        
+        for i in cursor:
+            self.campo = QTreeWidgetItem(self.tabela_geral_2, i)
+       
+        
 
                 
 if __name__ == "__main__":
