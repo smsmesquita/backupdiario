@@ -185,6 +185,8 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         
         self.pushButton_11.clicked.connect(self.cadastro)
         self.tabela_saida()
+      #  self.criador_tabela_geral()
+        self.pushButton_11.clicked.connect(self.criador_tabela_geral)
         
          
         
@@ -207,13 +209,152 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         cadastrar.cadastrar_clientes(self, caminho)
         
         cadastrar._connect(self)
+        
         cadastrar.insert_table(self)
         cadastrar.close_connection(self)
         
         
         
+    def criador_tabela_geral(self):
+        self._host='clientes1304.mysql.uhserver.com'
+        self._user='samuel13'
+        self._passwd='@lb130488'
+        self._database='clientes1304'
+        self.con = None        
         
-        
+        self.con = mysql.connector.connect(
+            host=self._host,
+            user=self._user,
+            password=self._passwd,
+            database=self._database
+           )
+        titulo = self.lineEdit.text()
+        cursor = self.con.cursor()
+        print('chegou')
+        cursor.execute (f"""
+                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo} (
+                Idtabela int(11) NOT NULL auto_increment,
+                nfe TEXT NOT NULL,
+                serie TEXT NOT NULL,
+                data_emissao TEXT NOT NULL,
+                cnpj_emitente TEXT NOT NULL,
+                nome_emitente TEXT NOT NULL,
+                logradouro_emitente TEXT NOT NULL, 
+                numero_emitente TEXT NOT NULL,
+                complemento_emitente TEXT NOT NULL, 
+                bairro_emitente TEXT NOT NULL, 
+                codigo_municipio_emitente TEXT NOT NULL, 
+                Municipio_emitente TEXT NOT NULL, 
+                uf_emitente TEXT NOT NULL, 
+                cep_emitente TEXT NOT NULL, 
+                cod_pais_emitente TEXT NOT NULL, 
+                pais_emitente TEXT NOT NULL, 
+                chave_de_acesso TEXT NOT NULL, 
+                codigo_barras TEXT NOT NULL, 
+                produto TEXT NOT NULL, 
+                NCM TEXT NOT NULL, 
+                CFOP TEXT NOT NULL, 
+                unidade_comercial TEXT NOT NULL, 
+                quantidade_comercial TEXT NOT NULL, 
+                valor_unidade_comercial TEXT NOT NULL, 
+                valor_total_produto TEXT NOT NULL, 
+                quantidade_produto TEXT NOT NULL, 
+                valor_produto TEXT NOT NULL, 
+                CST_ICMS00 TEXT NOT NULL,
+                cod_origem00 TEXT NOT NULL,
+                Base_ICMS00 TEXT NOT NULL, 
+                Percentagem_ICMS00 TEXT NOT NULL, 
+                Valor_ICMS00 TEXT NOT NULL,
+                CST_ICMS10 TEXT NOT NULL,
+                cod_origem10 TEXT NOT NULL,
+                Base_ICMS10 TEXT NOT NULL, 
+                Percentagem_ICMS10 TEXT NOT NULL, 
+                Valor_ICMS10 TEXT NOT NULL,
+                CST_ICMS20 TEXT NOT NULL,
+                cod_origem20 TEXT NOT NULL,
+                Base_ICMS20 TEXT NOT NULL, 
+                Percentagem_ICMS20 TEXT NOT NULL, 
+                Valor_ICMS20 TEXT NOT NULL,
+                CST_ICMS30 TEXT NOT NULL,
+                CST_ICMS40 TEXT NOT NULL,
+                CST_ICMS41 TEXT NOT NULL,
+                CST_ICMS50 TEXT NOT NULL,
+                CST_ICMS51 TEXT NOT NULL,
+                CST_ICMS60 TEXT NOT NULL,
+                CST_ICMS70 TEXT NOT NULL,
+                CST_ICMS90 TEXT NOT NULL, 
+                    
+                
+                
+                PRIMARY KEY(Idtabela)
+                );                            
+              
+                """)
+           
+    def criador_tabela_analitica(self):
+        cnx = sqlite3.connect('system.db')
+        titulo = self.lineEdit.text()
+        cursor = self.con.cursor()
+        print('chegou')
+        cursor.execute (f"""
+                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo} (
+                Idtabela int(11) NOT NULL auto_increment,
+                nfe TEXT NOT NULL,
+                serie TEXT NOT NULL,
+                data_emissao TEXT NOT NULL,
+                cnpj_emitente TEXT NOT NULL,
+                nome_emitente TEXT NOT NULL,
+                logradouro_emitente TEXT NOT NULL, 
+                numero_emitente TEXT NOT NULL,
+                complemento_emitente TEXT NOT NULL, 
+                bairro_emitente TEXT NOT NULL, 
+                codigo_municipio_emitente TEXT NOT NULL, 
+                Municipio_emitente TEXT NOT NULL, 
+                uf_emitente TEXT NOT NULL, 
+                cep_emitente TEXT NOT NULL, 
+                cod_pais_emitente TEXT NOT NULL, 
+                pais_emitente TEXT NOT NULL, 
+                chave_de_acesso TEXT NOT NULL, 
+                codigo_barras TEXT NOT NULL, 
+                produto TEXT NOT NULL, 
+                NCM TEXT NOT NULL, 
+                CFOP TEXT NOT NULL, 
+                unidade_comercial TEXT NOT NULL, 
+                quantidade_comercial TEXT NOT NULL, 
+                valor_unidade_comercial TEXT NOT NULL, 
+                valor_total_produto TEXT NOT NULL, 
+                quantidade_produto TEXT NOT NULL, 
+                valor_produto TEXT NOT NULL, 
+                CST_ICMS00 TEXT NOT NULL,
+                cod_origem00 TEXT NOT NULL,
+                Base_ICMS00 TEXT NOT NULL, 
+                Percentagem_ICMS00 TEXT NOT NULL, 
+                Valor_ICMS00 TEXT NOT NULL,
+                CST_ICMS10 TEXT NOT NULL,
+                cod_origem10 TEXT NOT NULL,
+                Base_ICMS10 TEXT NOT NULL, 
+                Percentagem_ICMS10 TEXT NOT NULL, 
+                Valor_ICMS10 TEXT NOT NULL,
+                CST_ICMS20 TEXT NOT NULL,
+                cod_origem20 TEXT NOT NULL,
+                Base_ICMS20 TEXT NOT NULL, 
+                Percentagem_ICMS20 TEXT NOT NULL, 
+                Valor_ICMS20 TEXT NOT NULL,
+                CST_ICMS30 TEXT NOT NULL,
+                CST_ICMS40 TEXT NOT NULL,
+                CST_ICMS41 TEXT NOT NULL,
+                CST_ICMS50 TEXT NOT NULL,
+                CST_ICMS51 TEXT NOT NULL,
+                CST_ICMS60 TEXT NOT NULL,
+                CST_ICMS70 TEXT NOT NULL,
+                CST_ICMS90 TEXT NOT NULL, 
+                    
+                
+                
+                PRIMARY KEY(Idtabela)
+                );                            
+              
+                """)    
         
         
     def tabela_saida(self):
