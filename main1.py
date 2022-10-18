@@ -1,4 +1,4 @@
-from os import access
+from os import access, name
 import sqlite3
 from turtle import pd
 from xml.etree.ElementTree import XML
@@ -107,15 +107,7 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
           
             
             cont +=1
-            
-       
-    
-            
-             
-        
-
-               
-            
+ 
               
             # ATUALIZA A TABELA   
             
@@ -125,11 +117,7 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
             #msg.setText("Importação Concluída")
             #msg.exec_()
             self.progressBar.setValue(0)
-                        
-            
-                
-               
-                
+     
             db.close_connection            
             
             
@@ -179,6 +167,10 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
 class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
     def __init__(self):
         super(NovoMainWindow, self).__init__()
+        db = Database()
+        
+        db.conecta()
+     
         
         self.setupUi(self)
         self.setWindowTitle('Sistema') 
@@ -187,22 +179,16 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         self.tabela_saida()
       #  self.criador_tabela_geral()
         self.pushButton_11.clicked.connect(self.criador_tabela_geral)
+        self.pushButton_11.clicked.connect(self.criador_tabela_analitica)
         
-         
-        
-        
+   
         self._host='clientes1304.mysql.uhserver.com'
         self._user='samuel1304'
         self._passwd='@lb130488'
         self._database='tabelaclientes'
         self.con = None
         
-         
-        
-        
-                
-
-        
+ 
     def cadastro(self):
         
         caminho= self.lineEdit.text()
@@ -213,8 +199,7 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         cadastrar.insert_table(self)
         cadastrar.close_connection(self)
         
-        
-        
+      
     def criador_tabela_geral(self):
         self._host='clientes1304.mysql.uhserver.com'
         self._user='samuel13'
@@ -292,13 +277,20 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
                 """)
            
     def criador_tabela_analitica(self):
-        cnx = sqlite3.connect('system.db')
-        titulo = self.lineEdit.text()
-        cursor = self.con.cursor()
-        print('chegou')
+       
+        
+        db = Database()
+        
+        db.conecta()
+        self.connection = sqlite3.connect('system.db')
+        
+        cursor = self.connection.cursor()
+               
+        titulo1 = self.lineEdit.text()
+        
         cursor.execute (f"""
-                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo} (
-                Idtabela int(11) NOT NULL auto_increment,
+                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo1} (
+                Idtabela int(11) NOT NULL,
                 nfe TEXT NOT NULL,
                 serie TEXT NOT NULL,
                 data_emissao TEXT NOT NULL,
