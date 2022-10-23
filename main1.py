@@ -1,14 +1,14 @@
-from os import access, name
+from os import access
 import sqlite3
 from turtle import pd
 from xml.etree.ElementTree import XML
 from PySide2.QtWidgets import (QApplication, QFileDialog, QMainWindow, QWidget, QMessageBox, QTableView, QTreeWidget, QTreeWidgetItem)
-from database import Database
+#from database import Database
 from ui_login import Ui_Login
 from ui_cadastro import *
 import sys
 from ui_sistema import Ui_MainWindow
-from xml_files import Read_xml
+#from xml_files import Read_xml
 import pandas as pd
 from PySide2 import QtCore, QtGui
 from PyQt5 import QtGui
@@ -17,7 +17,7 @@ import mysql
 from novocadastro import *
 import mysql.connector
 from mysql.connector import Error
-
+from teste1 import *
 
 
 class Login(QWidget, Ui_Login):
@@ -102,8 +102,9 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
             self.progressBar.setValue(cont)
             fullDataSet = xml.nfe_data(i)
            # self.tabela_principal() - resolvi comentar essa tabela porque estava conflitando com o criar tabela nota
-            db.create_table_nfe()
+           # db.create_table_nfe()
             db.insert_data(fullDataSet)
+            
           
             
             cont +=1
@@ -111,11 +112,11 @@ class MainWindow(QMainWindow, Ui_MainWindow,QTreeWidget):
               
             # ATUALIZA A TABELA   
             
-            #msg = QMessageBox()
+            msg = QMessageBox()
             #msg.setIcon(QMessageBox.Information)
             #msg.setWindowTitle("Importação XML")
-            #msg.setText("Importação Concluída")
-            #msg.exec_()
+            msg.setText("Importação Concluída")
+            msg.exec_()
             self.progressBar.setValue(0)
      
             db.close_connection            
@@ -218,78 +219,6 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
         print('chegou')
         cursor.execute (f"""
                 CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo} (
-                Idtabela int(11) NOT NULL auto_increment,
-                nfe TEXT NOT NULL,
-                serie TEXT NOT NULL,
-                data_emissao TEXT NOT NULL,
-                cnpj_emitente TEXT NOT NULL,
-                nome_emitente TEXT NOT NULL,
-                logradouro_emitente TEXT NOT NULL, 
-                numero_emitente TEXT NOT NULL,
-                complemento_emitente TEXT NOT NULL, 
-                bairro_emitente TEXT NOT NULL, 
-                codigo_municipio_emitente TEXT NOT NULL, 
-                Municipio_emitente TEXT NOT NULL, 
-                uf_emitente TEXT NOT NULL, 
-                cep_emitente TEXT NOT NULL, 
-                cod_pais_emitente TEXT NOT NULL, 
-                pais_emitente TEXT NOT NULL, 
-                chave_de_acesso TEXT NOT NULL, 
-                codigo_barras TEXT NOT NULL, 
-                produto TEXT NOT NULL, 
-                NCM TEXT NOT NULL, 
-                CFOP TEXT NOT NULL, 
-                unidade_comercial TEXT NOT NULL, 
-                quantidade_comercial TEXT NOT NULL, 
-                valor_unidade_comercial TEXT NOT NULL, 
-                valor_total_produto TEXT NOT NULL, 
-                quantidade_produto TEXT NOT NULL, 
-                valor_produto TEXT NOT NULL, 
-                CST_ICMS00 TEXT NOT NULL,
-                cod_origem00 TEXT NOT NULL,
-                Base_ICMS00 TEXT NOT NULL, 
-                Percentagem_ICMS00 TEXT NOT NULL, 
-                Valor_ICMS00 TEXT NOT NULL,
-                CST_ICMS10 TEXT NOT NULL,
-                cod_origem10 TEXT NOT NULL,
-                Base_ICMS10 TEXT NOT NULL, 
-                Percentagem_ICMS10 TEXT NOT NULL, 
-                Valor_ICMS10 TEXT NOT NULL,
-                CST_ICMS20 TEXT NOT NULL,
-                cod_origem20 TEXT NOT NULL,
-                Base_ICMS20 TEXT NOT NULL, 
-                Percentagem_ICMS20 TEXT NOT NULL, 
-                Valor_ICMS20 TEXT NOT NULL,
-                CST_ICMS30 TEXT NOT NULL,
-                CST_ICMS40 TEXT NOT NULL,
-                CST_ICMS41 TEXT NOT NULL,
-                CST_ICMS50 TEXT NOT NULL,
-                CST_ICMS51 TEXT NOT NULL,
-                CST_ICMS60 TEXT NOT NULL,
-                CST_ICMS70 TEXT NOT NULL,
-                CST_ICMS90 TEXT NOT NULL, 
-                    
-                
-                
-                PRIMARY KEY(Idtabela)
-                );                            
-              
-                """)
-           
-    def criador_tabela_analitica(self):
-       
-        
-        db = Database()
-        
-        db.conecta()
-        self.connection = sqlite3.connect('system.db')
-        
-        cursor = self.connection.cursor()
-               
-        titulo1 = self.lineEdit.text()
-        
-        cursor.execute (f"""
-                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo1} (
                 Idtabela int(11) NOT NULL,
                 nfe TEXT NOT NULL,
                 serie TEXT NOT NULL,
@@ -341,12 +270,82 @@ class NovoMainWindow(QMainWindow, Ui_MainWindow2,QTreeWidget):
                 CST_ICMS70 TEXT NOT NULL,
                 CST_ICMS90 TEXT NOT NULL, 
                     
-                
-                
+                                
                 PRIMARY KEY(Idtabela)
                 );                            
               
-                """)    
+                """)
+           
+    def criador_tabela_analitica(self):
+       
+        
+        db = Database()
+        
+        db.conecta()
+        self.connection = sqlite3.connect('system.db')
+        
+        cursor = self.connection.cursor()
+               
+        titulo1 = self.lineEdit.text()
+        
+        cursor.execute (f"""
+                CREATE TABLE IF NOT EXISTS {str('Cliente')+ titulo1} (
+                nfe TEXT,
+                serie TEXT,
+                data_emissao TEXT,
+                cnpj_emitente TEXT,
+                nome_emitente TEXT,
+                logradouro_emitente TEXT, 
+                numero_emitente TEXT,
+                complemento_emitente, 
+                bairro_emitente TEXT, 
+                codigo_municipio_emitente TEXT, 
+                Municipio_emitente TEXT, 
+                uf_emitente TEXT, 
+                cep_emitente TEXT, 
+                cod_pais_emitente TEXT, 
+                pais_emitente TEXT, 
+                chave_de_acesso TEXT, 
+                codigo_barras TEXT, 
+                produto TEXT, 
+                NCM TEXT, 
+                CFOP TEXT, 
+                unidade_comercial TEXT, 
+                quantidade_comercial TEXT, 
+                valor_unidade_comercial TEXT, 
+                valor_total_produto TEXT, 
+                quantidade_produto TEXT, 
+                valor_produto TEXT, 
+                CST_ICMS00 TEXT,
+                cod_origem00 TEXT,
+                Base_ICMS00 TEXT, 
+                Percentagem_ICMS00 TEXT, 
+                Valor_ICMS00 TEXT,
+                CST_ICMS10 TEXT,
+                cod_origem10 TEXT,
+                Base_ICMS10 TEXT, 
+                Percentagem_ICMS10 TEXT, 
+                Valor_ICMS10 TEXT,
+                CST_ICMS20 TEXT,
+                cod_origem20 TEXT,
+                Base_ICMS20 TEXT, 
+                Percentagem_ICMS20 TEXT, 
+                Valor_ICMS20 TEXT,
+                CST_ICMS30 TEXT,
+                CST_ICMS40 TEXT,
+                CST_ICMS41 TEXT,
+                CST_ICMS50 TEXT,
+                CST_ICMS51 TEXT,
+                CST_ICMS60 TEXT,
+                CST_ICMS70 TEXT,
+                CST_ICMS90 TEXT, 
+                    
+                
+                
+                PRIMARY KEY(chave_de_acesso, nfe, produto)
+                );                            
+              
+                """)
         
         
     def tabela_saida(self):
