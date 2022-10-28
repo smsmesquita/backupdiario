@@ -1,7 +1,10 @@
+from cgitb import reset
 import os
+import numpy as np
 import sqlite3
 import xml.etree.ElementTree as Et
 from datetime import date
+import pandas as pd
 
 
 class Read_xml():
@@ -34,6 +37,20 @@ class Read_xml():
         cep_emitente = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:emit/ns:enderEmit/ns:CEP", nsNFe))
         cod_pais_emitente = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:ide/ns:cPais", nsNFe))
         pais_emitente = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:emit/ns:xPais", nsNFe))
+        inscricao_emitente = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:emit/ns:IE", nsNFe))
+
+        cnpj_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:CNPJ", nsNFe))
+        nome_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:xNome", nsNFe))
+        logradouro_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:xLgr", nsNFe))
+        numero_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:nro", nsNFe))
+        complemento_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:xCpl", nsNFe))
+        bairro_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:xBairro", nsNFe))
+        codigo_municipio_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:cMun", nsNFe))
+        Municipio_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:xMun", nsNFe))
+        uf_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:UF", nsNFe))
+        cep_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:enderDest/ns:CEP", nsNFe))
+        inscricao_destinatario = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:dest/ns:IE", nsNFe))
+               
         chave_de_acesso = self.check_none(root.find("./ns:protNFe/ns:infProt/ns:chNFe", nsNFe))
         
         
@@ -84,18 +101,37 @@ class Read_xml():
             CST_ICMS51 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS51/ns:CST", nsNFe))
             CST_ICMS60 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS60/ns:CST", nsNFe))
             CST_ICMS70 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS70/ns:CST", nsNFe))
+            
+            cod_origem70 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS70/ns:orig", nsNFe))
+            Base_ICMS70 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS70/ns:vBC", nsNFe))
+            Percentagem_ICMS70 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS70/ns:pICMS", nsNFe))
+            Valor_ICMS70 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS70/ns:vICMS", nsNFe))
+            
             CST_ICMS90 = self.check_none(item.find("./ns:imposto/ns:ICMS/ns:ICMS90/ns:CST", nsNFe))
+            
+            CST_PIS = self.check_none(item.find("./ns:imposto/ns:PIS/ns:PISAliq/ns:CST", nsNFe))
+            Base_PIS = self.check_none(item.find("./ns:imposto/ns:PIS/ns:PISAliq/ns:vBC", nsNFe))
+            Percentagem_PIS = self.check_none(item.find("./ns:imposto/ns:PIS/ns:PISAliq/ns:pPIS", nsNFe))
+            Valor_PIS = self.check_none(item.find("./ns:imposto/ns:PIS/ns:PISAliq/ns:vPIS", nsNFe))
+            CST_COFINS = self.check_none(item.find("./ns:imposto/ns:COFINS/ns:COFINSAliq/ns:CST", nsNFe))
+            Base_COFINS = self.check_none(item.find("./ns:imposto/ns:COFINS/ns:COFINSAliq/ns:vBC", nsNFe))
+            Percentagem_COFINS = self.check_none(item.find("./ns:imposto/ns:COFINS/ns:COFINSAliq/ns:pCOFINS", nsNFe))
+            Valor_COFINS = self.check_none(item.find("./ns:imposto/ns:COFINS/ns:COFINSAliq/ns:vCOFINS", nsNFe))
+            
+            
             #PIS = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:ide/ns:PIS", nsNFe))
             #CST_PIS = self.check_none(root.find("./ns:NFe/ns:infNFe/ns:ide/ns:CST", nsNFe))
      
             dados = [nfe, serie, data_emissao, cnpj_emitente, nome_emitente, logradouro_emitente, 
             numero_emitente, complemento_emitente, bairro_emitente, codigo_municipio_emitente, 
-            Municipio_emitente, uf_emitente, cep_emitente, cod_pais_emitente, pais_emitente, 
+            Municipio_emitente, uf_emitente, cep_emitente, cod_pais_emitente, pais_emitente, inscricao_emitente,  cnpj_destinatario, nome_destinatario, logradouro_destinatario, 
+            numero_destinatario, complemento_destinatario, bairro_destinatario, codigo_municipio_destinatario, 
+            Municipio_destinatario, uf_destinatario, cep_destinatario, inscricao_destinatario,  
             chave_de_acesso, codigo_barras, produto, NCM, CFOP, unidade_comercial, quantidade_comercial, 
             valor_unidade_comercial, valor_total_produto, quantidade_produto, valor_produto, 
             CST_ICMS00, cod_origem00, Base_ICMS00, Percentagem_ICMS00, Valor_ICMS00,CST_ICMS10,  
             cod_origem10, Base_ICMS10, Percentagem_ICMS10, Valor_ICMS10,CST_ICMS20,  cod_origem20,Base_ICMS20, Percentagem_ICMS20, Valor_ICMS20,
-            CST_ICMS30, CST_ICMS40, CST_ICMS41, CST_ICMS50, CST_ICMS51,CST_ICMS60, CST_ICMS70, CST_ICMS90]
+            CST_ICMS30, CST_ICMS40, CST_ICMS41, CST_ICMS50, CST_ICMS51,CST_ICMS60, CST_ICMS70, cod_origem70, Base_ICMS70, Percentagem_ICMS70, Valor_ICMS70, CST_ICMS90, CST_PIS, Base_PIS, Percentagem_PIS, Valor_PIS, CST_COFINS, Base_COFINS, Percentagem_COFINS, Valor_COFINS ]
             
             notas.append(dados)
             
@@ -128,6 +164,10 @@ class Database():
     
     def conecta(self):
         self.connection = sqlite3.connect(self.name)
+  #  def consultar_tabela(self):
+         
+       # for x in myresult: 
+      #  print(myresult) 
         
     def close_connection(self):
         try:
@@ -137,42 +177,76 @@ class Database():
     def insert_data(self, full_dataset):
     
         cursor = self.connection.cursor()
+       # cursor.execute("""SELECT * FROM sqlite_master WHERE type= 'table';""") 
+       # myresult = cursor.fetchall() 
+        cnx = sqlite3.connect('system.db')
+        result = pd.read_sql_query("""SELECT * FROM sqlite_master WHERE type= 'table';""", cnx)
+        novoresultado = pd.DataFrame(result['name'])
+        
+        res = novoresultado.values.tolist()
+                     
+        
+        
+            
+        
+        
+        
+        
+      #  for x in myresult: 
+        
+      #  print(type(myresult))
+      #  print(len(myresult))
+       # novomyresult = (pd.DataFrame(myresult))
         
         
         campos_tabela = ('nfe', 'serie', 'data_emissao', 'cnpj_emitente', 'nome_emitente', 'logradouro_emitente', 
             'numero_emitente', 'complemento_emitente', 'bairro_emitente', 'codigo_municipio_emitente', 
-            'Municipio_emitente', 'uf_emitente', 'cep_emitente', 'cod_pais_emitente', 'pais_emitente', 
+            'Municipio_emitente', 'uf_emitente', 'cep_emitente', 'cod_pais_emitente', 'pais_emitente', 'inscricao_emitente', 'cnpj_destinatario','nome_destinatario', 'logradouro_destinatario', 
+            'numero_destinatario', 'complemento_destinatario', 'bairro_destinatario', 'codigo_municipio_destinatario', 
+            'Municipio_destinatario', 'uf_destinatario', 'cep_destinatario', 'inscricao_destinatario',
             'chave_de_acesso', 'codigo_barras', 'produto', 'NCM', 'CFOP', 'unidade_comercial', 'quantidade_comercial', 
             'valor_unidade_comercial', 'valor_total_produto', 'quantidade_produto', 'valor_produto',   
             'CST_ICMS00',  'cod_origem00','Base_ICMS00', 'Percentagem_ICMS00', 'Valor_ICMS00','CST_ICMS10',  
             'cod_origem10','Base_ICMS10', 'Percentagem_ICMS10', 'Valor_ICMS10','CST_ICMS20',  'cod_origem20','Base_ICMS20', 'Percentagem_ICMS20', 'Valor_ICMS20',
-            'CST_ICMS30', 'CST_ICMS40', 'CST_ICMS41', 'CST_ICMS50', 'CST_ICMS51','CST_ICMS60', 'CST_ICMS70', 'CST_ICMS90')
+            'CST_ICMS30', 'CST_ICMS40', 'CST_ICMS41', 'CST_ICMS50', 'CST_ICMS51','CST_ICMS60', 'CST_ICMS70', 'cod_origem70', 'Base_ICMS70', 'Percentagem_ICMS70', 'Valor_ICMS70', 'CST_ICMS90', 'CST_PIS', 'Base_PIS', 'Percentagem_PIS', 'Valor_PIS', 'CST_COFINS', 'Base_COFINS', 'Percentagem_COFINS', 'Valor_COFINS')
 
    
                 
-        quantidade = "," .join (map(str, '?'*49))
+        quantidade = "," .join (map(str, '?'*73))
         
        # query = f"""INSERT INTO Notas {campos_tabela} VALUES ({quantidade})"""
        # print('chegou mesmo')
         
-       # query = f"""INSERT INTO Cliente43648973000144 {campos_tabela} VALUES ({quantidade})"""
-        
+       # query = f"""INSERT INTO Cliente24722646000140entrada {campos_tabela} VALUES ({quantidade})"""
+       # cursor = self.connection.cursor()
+       # sqliteConnection = sqlite3.connect('SQLite_Retrieving_system.db')
+      #  cursor.execute("SELECT * FROM sqlite_master WHERE type='table'") 
+  
+       # myresult = cursor.fetchall()
+       # print(cursor.fetchall())
         
         try:
             for nota in full_dataset:
-                
-                Notas = str("Cliente")+nota[3]
-                print(Notas)
-                query = f"""INSERT INTO {Notas} {campos_tabela} VALUES ({quantidade})"""
-                cursor.execute(query, tuple(nota))     
-                self.connection.commit()
-             
-                
-            
-        
+               # myresult = 'Cliente24722646000140saida'
+                Notas = str("Cliente")+ nota[3] + str("saida")
+                novaNotas = str("Cliente")+ nota[16] + str("entrada")
+                #Notas = str("Cliente")+ nota[3]
+                for x in range(len(res)):
+                    if Notas in res[x]:
+                        print('chegou1+1')
+                        query = f"""INSERT INTO {Notas} {campos_tabela} VALUES ({quantidade})"""
+                        cursor.execute(query, tuple(nota))     
+                        self.connection.commit()
+                    elif novaNotas in res[x]:
+                        query = f"""INSERT INTO {novaNotas} {campos_tabela} VALUES ({quantidade})"""
+                        cursor.execute(query, tuple(nota))     
+                        self.connection.commit()
+                    else:
+                        pass
+                   
         except sqlite3.IntegrityError:
             print('nota ja existe no banco')
-        print('chegou')
+        
         
         
         
@@ -181,7 +255,7 @@ if __name__ == "__main__":
     db = Database()
     db.conecta()
     titulo = "Notas"
-    
+  #  db.consultar_tabela()
     print('conectado')
     xml = Read_xml("C:/Users/Usuário/OneDrive/SAMUEL/PROGRAMACAO/xml_teste/TESTECNPJ/")
     all = xml.all_files()
