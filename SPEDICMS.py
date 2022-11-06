@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 import pandas as pd
-import re
+
 
 dados = datetime.now()
 
@@ -14,92 +14,53 @@ df = pd.DataFrame(result0150, columns = ['nome_emitente','codigo_pais','cnpj_emi
 
 df = df.drop_duplicates(subset ="nome_emitente",keep = 'first')
 df.insert(0, 'codigo_cliente', range(880, 880 + len(df)))
-print(df)
 
 df.loc[df['codigo_pais'] != '','codigo_pais'] = '1058'
 
 
-    #vamos transformar cada linha do dataframe numa lista e inserir no codigo 0150 do txt  
+novodf= df['nome_emitente'].str.replace(' ', '_')
 
-df = df.values.tolist()
+novodf1 = df['logradouro_emitente'].str.replace(',', '.')
+df.drop(columns=['nome_emitente','logradouro_emitente'], inplace= True)
 
-#df.loc[df['Municipio_emitente'] == [leitor['Nome Municipio']],'Municipio_emitente'] = leitor['Codigo Municipio Completo']
 
-for x in range(len(df)):
+df.insert(1,'nome_emitente', novodf)
+df.insert(5,'logradouro_emitente',novodf1)
+
+novodf2 = df['nome_emitente'].str.replace(',', '_')
+
+novodf3 = df['logradouro_emitente'].str.replace(' ', '_')
+df.drop(columns=['nome_emitente','logradouro_emitente'], inplace= True)
+
+
+df.insert(1,'nome_emitente', novodf2)
+df.insert(5,'logradouro_emitente',novodf3)
+
+
+df2 = df.values.tolist()
+
+
+
+for x in range(len(df2)):
       arquivo = open('teste.txt', 'a')
-      arquivo.writelines(str(df[x])+'\n')
+      arquivo.writelines(str(df2[x])+'\n')
 arquivo = open('teste.txt', 'r')
 novoarq = arquivo.readlines()
-#novoarq = arquivo.close()
-#novoarquiv = novoarq.replace(',','|')
 
+print('chegou aqui')
 arquivo = open('teste.txt', 'w')
 
-#print(len(list(novoarq)))
+
 for i in range(len(novoarq)):
       for j in range(len(novoarq[i])):
         novoarquivo =novoarq[i][j]
        # if novoarquivo == ",":
-       # novoarquivo= novoarquivo.strip()
+        novoarquivo= novoarquivo.strip()
         novoarquivo = novoarquivo.replace('[','|0150|')
-        novoarquivo = novoarquivo.removesuffix(",")
-        novoarquivo = novoarquivo.removesuffix(']')
+        novoarquivo = novoarquivo.replace(']','|\n')
+        novoarquivo = novoarquivo.replace('_',' ')
         
-        #novoarquivo = novoarquivo.replace(']','\n')
-       # arquivo = open('teste1.txt', 'a')
-        arquivo.write(str(novoarquivo.replace("'","|")))
-        
-
-
-
-
-      
-        
-        # é necessario agora separar as listas pela quantidade correta nao por string para fazer a divisao final com |
-      
+        novoarquivo = novoarquivo.removesuffix("'")
        
-
-
-#result0150 = result0150.values.tolist()
-#temp = set()
-#res0150 = [el for el in result0150 if not(tuple(el) in temp or temp.add(tuple(el)))] 
-#arquivo = open('teste.txt', 'a')
-#arquivo.writelines(str(res0150)+"|")
-#for x in range(len(res0150)):
-      # for y in range(len(res0150[x])):
-             # if y = 0
-           
-            #  arquivo = open('teste.txt', 'a')
-             # arquivo.write(str(res0150[x][y])+"|")
-#arquivo = open('teste.txt', 'r')
-#unica_string = arquivo.read()
-#arquivo.close()
-#print(unica_string)
-#with open('teste.txt','r') as arquivo:
-   #for valor in arquivo:
-        #  print(valor[0])
+        arquivo.write(str(novoarquivo.replace(",","|")))
        
-
-     #estou achando a primeira string entao preciso achar a string | e acrescentar os codigos que preciso     
-
-#for x in range(len(res0150)):
-  #  print(x)
- #   novox = res0150[x]
-  #  for y in range(len(novox)):
-        # print(res0150[x][0])
-      #  print(result[x][2])
-#print(res0150[0])
-              
-    #print(len(result))
- #   novoresult = result[x]+"|"
-  #  print(novoresult)
-
-#arquivo = open('teste.txt', 'a')
-#arquivo.write(str(res0150)+"|")
-
-
-
-
-
-
-
