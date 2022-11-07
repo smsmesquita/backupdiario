@@ -47,7 +47,7 @@ for x in range(len(df2)):
 arquivo = open('teste.txt', 'r')
 novoarq = arquivo.readlines()
 
-print('chegou aqui')
+
 arquivo = open('teste.txt', 'w')
 
 
@@ -63,4 +63,23 @@ for i in range(len(novoarq)):
         novoarquivo = novoarquivo.removesuffix("'")
        
         arquivo.write(str(novoarquivo.replace(",","|")))
-       
+
+result0190 =  pd.read_sql_query("SELECT unidade_comercial FROM Cliente24722646000140entrada WHERE nfe != ''", cn)
+
+df = pd.DataFrame(result0190, columns = ['unidade_comercial'])
+
+df = df.drop_duplicates(subset ="unidade_comercial",keep = 'first')      #removi as duplicidades 
+
+df = df.values.tolist() #transformei em lista
+df = str(df)[1:-1] #retirei os colchetes sendo o primeiro e o último
+
+df = str(df).replace(',','') #removi a partir daqui as strings que não me interessam
+
+df = str(df).replace('[',"|")
+df = str(df).replace(']',"")
+
+df = str(df).replace("'","")
+df = '|0190'+str(df)+'|'
+arquivo = open('teste.txt', 'a') # o arquivo foi aberto com "a" para nao apagar o anterior
+arquivo.write(str(df.replace(" ",""))) #a funcao que achei que elimina espaços foi no ato de escrever o arquivo
+
