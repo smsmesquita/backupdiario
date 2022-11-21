@@ -26,6 +26,7 @@ class ICMS:
 
     df_saida = pd.DataFrame(result_saida, columns = ['NCM','Percentagem_ICMS00', 'Percentagem_ICMS10', 'Percentagem_ICMS20'])
     
+    
     variavel_a = "Cliente24722646000140entrada"
     result_entrada = pd.read_sql_query(f"""SELECT NCM, Percentagem_ICMS00,Percentagem_ICMS10, Percentagem_ICMS20 FROM {variavel_a}""", cnx)
 
@@ -40,9 +41,11 @@ class ICMS:
         for item in base['NCM']:
             if y['NCM'] in item:
                 return '11'
+                
     df_entrada['Percentagem_ICMS10'] = df_entrada.apply(iter_pandas2, axis=1)
     df_saida['Percentagem_ICMS10'] = df_saida.apply(iter_pandas2, axis=1)
     print(df_entrada)
+    
  #   print('fez entrada')
    # print(df_saida)
  #   print('fez saida')
