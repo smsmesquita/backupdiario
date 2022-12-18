@@ -16,9 +16,6 @@ class ICMS:
  #def iter_pandas2(y): 
     
     
-#for linha in range(len(df)):
-    #if df['NCM'].iloc[linha] in ['10063021','22021000']:
-        #df['Percentagem_ICMS00'].iloc[linha] = '18'
     cnx = sqlite3.connect('system.db')
     variavel_b = "Cliente24722646000140saida"
     result_saida = pd.read_sql_query(f"""SELECT NCM, Percentagem_ICMS00,Percentagem_ICMS10, Percentagem_ICMS20 FROM {variavel_b}""", cnx)
@@ -34,14 +31,12 @@ class ICMS:
     
       
     
-   # print(df_entrada)
     def iter_pandas2(y):
        
        z = ['cnpj_emitente']
       
       
        for z in y:
-          # print(z)
            
            if z ==  y['cnpj_emitente']:
            
@@ -52,7 +47,6 @@ class ICMS:
             navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
          #   navegador = webdriver.Chrome(service= service, options= options)
             
-          #print(result_entrada)
             navegador.get(f"http://cnpj.info/" + str(z))
             result=pd.read_html(navegador.find_element(By.ID, "content").get_attribute('innerHTML'))  
             nresult = np.array(result[0])
@@ -64,9 +58,6 @@ class ICMS:
                 nyresult = nzresult[:11]
                 
             
-           # dicio = dict(zip([zz],[yy]))
-           # print(dicio)
-            
                 base = pd.read_csv(r"C:\Users\Usuário\Desktop\Novo_Projeto\NCMDEFINITIVA.csv", encoding= 'UTF-8', sep= ';')
                 
                 base2 = pd.read_csv(r"C:\Users\Usuário\Desktop\Novo_Projeto\NCMREDUCAO.csv", encoding= 'UTF-8', sep= ';')
@@ -74,32 +65,35 @@ class ICMS:
                 CFOP = ['5908','6908','5909','6909','6915', '5929','6929', '5915', '5916', '6915', '6916']
                 ISENCAO = ['08104000','02006000','08109012','84386000','04039000','08021200','08109013','08109014']
                 vnitem = []
+                vnitem1 = []
                 vnitem2 = []
+                vnitem3 = []
                 nitem = []
                 sul = ['MG','SP','RJ','PR','RS','SC']
+                var = []
+                variavel = []
               
                 if nyresult in rsresult:
                    
                             for item in base['NCM']:
                                 vnitem.append(item)
+                            for item1 in base['Ramo']:
+                                vnitem1.append(item1)
                             for item2 in base['Porcentagem']:
                                 vnitem2.append(item2)
+                            for item3 in base['CEST']:
+                                vnitem3.append(item3)
                                 
-                                #print(vnitem)
-                           # print('consulta')
                             if y['NCM'] in str(vnitem):
                                  a = vnitem.index(y['NCM'])
                                  
                                  print('TEM ST')
                                  
-                                 
                                  for item in base2['NCM']:
                                     nitem.append(base2['NCM'])
-                                 valorICMS =  []
                                  
                                  value_real = float(y['valor_total_produto'])
-                                 
-                                 MVA = float()                        
+                                                        
                                  if y['NCM'] in str(nitem):
                                     
                                     print(nitem)
@@ -112,22 +106,18 @@ class ICMS:
                                             variavel = '60'
                                             print(variavel)
                                         else:
-                                            variavel = '70.18'+ str((vnitem2[a])) 
+                                            variavel = ['70', '18']+   [(vnitem2[a])] + [(vnitem3[a])]
+                                            
+                                            
                                             print(variavel) 
-                                           # PercentagemI = '0.18'    
-                                           # baseICMS = value_real * 0.20 * 1.6666
-                                         #   valorICMS = value_real * 0.20 * 1.6666 * 0.18 - value_real * 0.20 * 0.18
-                                                                                       
+                                                               
                                     elif y['uf_emitente'] in sul:
                                             
-                                          #  y['valor_total_produto'] = value_real
-                                           # valorICMS = value_real * 0.20 * 1.6666 * 0.18 - value_real * 0.07
-                                            variavel = '70.7'
+                                            variavel = ['70', '7.00']+   [(vnitem2[a])] + [(vnitem3[a])]
                                             print(variavel)
                                     else:
-                                        variavel = '70.12'
-                                       # y['valor_total_produto'] = value_real
-                                        #valorICMS = value_real * 0.20 * 1.6666 * 0.18 - value_real * 0.12
+                                        variavel = ['70', '12']+   [(vnitem2[a])] + [(vnitem3[a])]
+                                      
                                         print(variavel)
                                     
                                             
@@ -142,16 +132,15 @@ class ICMS:
                                                 print(variavel)
                                             else:
                                                 
-                                                variavel = '10.18'
+                                                variavel = ['10', '18']+   [(vnitem2[a])] + [(vnitem3[a])]
                                                 print(variavel)
                                                 
-                                               # valorICMS = value_real * 1.6666 * 0.18 - value_real * 0.18
                                                                                        
                                     elif y['uf_emitente'] in sul:
-                                            variavel = '10.7'
+                                            variavel = ['70', '7.00']+   [(vnitem2[a])] + [(vnitem3[a])]
                                             print(variavel)
                                     else:
-                                        variavel = '10.12'
+                                        variavel = ['70', '12.00']+   [(vnitem2[a])] + [(vnitem3[a])]
                                         print(variavel)
                                  
                                     
@@ -162,18 +151,15 @@ class ICMS:
                                         print('TEM REDUCAO SEM SUBSTITUICAO TRIBUTARIA')
                                         if y['uf_emitente'] == 'DF':
                                         
-                                            variavel = '20.18'  
+                                            variavel = ['20', '18']+   [(vnitem2[a])] + [(vnitem3[a])]  
                                             print(variavel)
                                                                                        
                                         elif y['uf_emitente'] in sul:
                                             variavel = '20.7'
                                             print(variavel)
                                         else:
-                                            variavel = '20.12'
+                                            variavel = ['20', '12']+   [(vnitem2[a])] + [(vnitem3[a])]
                                             print(variavel)
-                                       # y['valor_total_produto'] = value_real
-                                        #valorICMS = value_real * 0.20 * 1.6666 * 0.18 - value_real * 0.12
-                                    
                                             
                                 else:
                                         print('NÃO TEM REDUCAO')
@@ -234,7 +220,7 @@ class ICMS:
                                 print(variavel)
                                     
                                 
-                                return variavel
+            return variavel
     
     #if __name__ == "__main__":
          
@@ -242,20 +228,27 @@ class ICMS:
     #df_entrada['Percentagem_ICMS20'] = df_entrada.apply(iter_pandas2, axis=1)
     df_entrada['NOVACOLUNA'] = df_entrada.apply(iter_pandas2, axis=1)
    # new_value = float(df_entrada['valor_total_produto'])
-    
+    i = [] 
    # df_entrada.iat[1,10]= int(new_value) * 0.20 * 1.6666
-    
-  #1  for s in df_entrada.iterrows():
-       # for x in df_entrada['NOVACOLUNA']: 
+    for s in df_entrada.iterrows():
+          
         
-      #1#1      indice = s[0]
-         #1   print(df_entrada.iloc[indice, 12])
-         #1   if df_entrada.iloc[indice, 12] == '3':
-           #1     print(indice), print('ver1')
-           #1     df_entrada.iat[indice, 10] = 18
-            #   df_entrada.iat[(len(s)-1),10]= df_entrada['valor_total_produto']* 0.20 * 1.6666
-           #     df_entrada.iat[(len(s)-1), 11]= df_entrada['valor_total_produto']* 0.20 * 1.6666 * 0.18 - df_entrada['valor_total_produto'] * 0.20 * 1.6666
-               # print(df_entrada)
+        indice = s[0]
+        
+        k = df_entrada.iloc[indice, 13]
+    
+        if k[0] == '70':
+            df_entrada.iat[indice, 11] = k[1]
+           
+         
+    
+        #    print(df_entrada.iloc[indice, 13])
+         #   if df_entrada.iloc[indice, 13] == '70':
+          #      print(indice), print('ver1')
+           #     df_entrada.iat[indice, 10] = 18
+            #    df_entrada.iat[(len(s)-1),10]= df_entrada['valor_total_produto']* 0.20 * 1.6666
+             #   df_entrada.iat[(len(s)-1), 11]= df_entrada['valor_total_produto']* 0.20 * 1.6666 * 0.18 - df_entrada['valor_total_produto'] * 0.20 * 1.6666
+    print(df_entrada)
           #1  elif df_entrada.iloc[indice, 12] == '5':
          #1       print(indice), print('ver2')
           #1      df_entrada.iat[indice, 10] = 12
