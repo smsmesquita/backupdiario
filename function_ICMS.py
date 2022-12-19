@@ -225,11 +225,10 @@ class ICMS:
     #if __name__ == "__main__":
          
     
-    #df_entrada['Percentagem_ICMS20'] = df_entrada.apply(iter_pandas2, axis=1)
+    
     df_entrada['NOVACOLUNA'] = df_entrada.apply(iter_pandas2, axis=1)
-   # new_value = float(df_entrada['valor_total_produto'])
-    i = [] 
-   # df_entrada.iat[1,10]= int(new_value) * 0.20 * 1.6666
+   
+   
     for s in df_entrada.iterrows():
           
         
@@ -239,6 +238,10 @@ class ICMS:
     
         if k[0] == '70':
             df_entrada.iat[indice, 11] = k[1]
+            cursor = cnx
+            cursor.execute (f"""UPDATE 'Cliente36966715000140entrada' SET CST_ICMS70 = {k[1]} WHERE ID = {indice + 1}""" )
+            cnx.commit()      
+            print('atualizado com sucesso') 
            
          
     
@@ -259,8 +262,7 @@ class ICMS:
          #1      print('deu erro')
         #1    print(df_entrada)
         
-                   
-                
+               
         
     #df_entrada = pd.DataFrame(result_entrada, columns= ['cnpj_emitente', 'NCM', 'uf_emitente', 'valor_total_produto','Percentagem_ICMS00', 'Percentagem_ICMS10','Percentagem_ICMS20', 'CST_ICMS60', 'CST_ICMS70']) 
    # df_entrada['Percentagem_ICMS20'].to_list() 
