@@ -138,25 +138,6 @@ class Read_xml():
                     
             
    
-               
-               # myresult = 'Cliente24722646000140saida'
-            
-           
-                  
-                   
-                    
-                #Notas = str("Cliente")+ nota[3]
-                    
-                        
-                            #print(result)
-                           
-                        #print(nota)
-                            
-      #  return notas
-        
-            
-    
-        
       
                 
     def check_none(self,var):
@@ -210,25 +191,30 @@ class Database():
                     
                # myresult = 'Cliente24722646000140saida'
         
-        try:
-            for nota in full_dataset:
-                Notasaida = str("Cliente")+ nota[3] + str("saida")
+            
+        for nota in full_dataset:
+              #  print(full_dataset)
+            try:    
                 Notaentrada = str("Cliente")+ nota[16] + str('entrada')
                 for x in range(len(res)):
-                    
+                        Notasaida = str("Cliente")+ nota[3] + str("saida")
+                        
                         if Notasaida in res[x]:
                             query = f"""INSERT INTO {Notasaida} {campos_tabela} VALUES ({quantidade})"""
                             cursor.execute(query, tuple(nota))
+                            cursor.fetchone()
+                            print(nota)
                             self.connection.commit()
                         elif Notaentrada in res[x]:
                             query = f"""INSERT INTO {Notaentrada} {campos_tabela} VALUES ({quantidade})"""
                             cursor.execute(query, tuple(nota))
+                            cursor.fetchone()
                             self.connection.commit()
-                        else:
-                            pass
+                      #  else:
+                       #     pass
         
-        except sqlite3.IntegrityError:
-            print('nota ja existe no banco')
+            except sqlite3.IntegrityError:
+                print('nota já existe no banco')
     
         
     def close_connection(self):
